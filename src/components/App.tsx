@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {ChangeEvent, useState, FC } from 'react';
 import styled from 'styled-components';
+import { MemoList } from './MemoList';
 
 export const App: FC = () => {
     // text box
@@ -24,32 +25,21 @@ export const App: FC = () => {
         setText('');
     };
 
-    // when click delete button
-    const onClickDelete = (index: number) => {
+    const onClickDelete = useCallback((index: number) => {
         const newMemos = [...memos];
-        // delete memo
         newMemos.splice(index, 1);
         setMemos(newMemos);
-    };
+    }, [memos]);
 
     return (
         <div>
             <h1>React Memo App</h1>
             <input type="text" value={text} onChange={onChangeText} />
             <Sbutton onClick={onClickAdd}>Add</Sbutton>
-            <Scontainer>
-                <h1 style={{textAlign: 'center'}}>Memo List</h1>
-                {memos.map((memo, index) => (
-                    <SMemoWrapper key={index}>
-                        <div>{memo}</div>
-                        <Sbutton onClick={() => onClickDelete(index)}>Delete</Sbutton>
-                    </SMemoWrapper>
-                ))}
-            </Scontainer>
+            <MemoList memos={memos} onClickDelete={onClickDelete} />
         </div>
     );
 };
-
 
 const Sbutton = styled.button`
     background-color: #4CAF50;
@@ -62,22 +52,4 @@ const Sbutton = styled.button`
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
-`;
-
-const Scontainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`;
-
-const SMemoWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin: 10px 0;
 `;
