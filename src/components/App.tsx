@@ -2,12 +2,12 @@ import React, { useCallback } from 'react';
 import {ChangeEvent, useState, FC } from 'react';
 import styled from 'styled-components';
 import { MemoList } from './MemoList';
+import { useMemoList } from '../hooks/useMemoList';
 
 export const App: FC = () => {
+    const { memos, addMemo, deleteMemo } = useMemoList();
     // text box
     const [text, setText] = useState<string>('');
-    // memo list
-    const [memos, setMemos] = useState<string[]>([]);
 
     // text box change event
     const onChangeText = (e: ChangeEvent<HTMLInputElement>) => {
@@ -16,20 +16,13 @@ export const App: FC = () => {
 
     // when click add button
     const onClickAdd = () => {
-        if (text === '') {
-            return;
-        }
-        const newMemos = [...memos, text];
-        setMemos(newMemos);
-        // clear text box
+        addMemo(text);
         setText('');
     };
 
     const onClickDelete = useCallback((index: number) => {
-        const newMemos = [...memos];
-        newMemos.splice(index, 1);
-        setMemos(newMemos);
-    }, [memos]);
+        deleteMemo(index);
+    }, [deleteMemo]);
 
     return (
         <div>
